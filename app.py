@@ -1,97 +1,40 @@
+from unicodedata import name
 import pandas as pd
 import time
 import yfinance as yf
 import altair as alt
 import streamlit as st
+import matplotlib.pyplot as plt
+import japanize_matplotlib
+import mplfinance as mpf
+import warnings
+from datetime import date, datetime
 
 st.title("日経225株価可視化アプリ")
 
-st.sidebar.write("""
-# 日経225株価
-こちらは株価可視化ツールです。以下のオプションから表示日数を指定できます。
+st.write("""
+    こちらは株価可視化ツールです。
+    日経225の銘柄比較と銘柄の一目均衡表を確認することができます。
 """)
 
-st.sidebar.write("""
-## 表示日数選択
-""")
+filename = 'nikkei.csv'
+df = pd.read_csv(filename, encoding='shift-jis')
 
-days = st.sidebar.slider('日数', 1, 50, 25)
-
-st.write(f"""
-### 過去 **{days}日間** の日経225株価
-""")
-
-@st.cache
-def get_data(days, tickers):
-    horizonData = pd.DataFrame()
-    for company in tickers.keys():
-        try:
-            tkr = yf.Ticker(tickers[company])
-            hist = tkr.history(period=f'{days}d')
-            hist.index = hist.index.strftime('%d %B %Y')
-            hist = hist[['Close']]
-            hist.columns = [company]
-            hist = hist.T
-            hist.index.name = 'Name'
-            horizonData = pd.concat([horizonData, hist])
-        except Exception:
-            pass
-    return horizonData
-
-try:
-    st.sidebar.write("""
-    ## 株価の範囲指定
+col1, col2 = st.columns(2)
+with col1:
+    st.write("""
+    ### 日経225銘柄一覧
     """)
+    st.dataframe(df, 800, 500)
 
-    ymin, ymax = st.sidebar.slider(
-        '範囲を指定してください。',
-        0.0, 10000.0, (0.0, 10000.0)
-    )
+with col2:
+    st.write("""
+    ### アプリの説明
+    """)
+    st.write("""
+    「StockAnalysis」では、銘柄の一目均衡表を表示します。株価変動の分析にお役立てください。
 
-    filename = 'nikkei.csv'
-    df = pd.read_csv(filename, encoding='shift-jis')
+    「StockCompare」では銘柄の株価比較ができます。同業種の銘柄比較などに役立てください。
 
-    tickers = {}
-    names = df['銘柄名']
-    i = 0
-    for name in names:
-        code = df[df['銘柄名']==name]['コード'][i]
-        stockCode = str(code) + '.T'
-        ticker = {
-            name: stockCode
-        }
-        tickers.update(ticker)
-        i += 1
-
-    horizonData = get_data(days, tickers)
-
-    companies = st.multiselect(
-        '銘柄を選択してください。',
-        list(horizonData.index),
-        ['トヨタ', 'ソニーＧ', 'ＮＴＴ']
-    )
-
-    if not companies:
-        st.error('少なくとも一社は選んでください。')
-    else:
-        selectData = horizonData.loc[companies]
-        st.write("### 株価（円）", selectData.sort_index())
-        verticalData = selectData.T.reset_index()
-        verticalData = pd.melt(verticalData, id_vars=['Date']).rename(
-            columns={'Date': '日付', 'Name': '銘柄', 'value': '株価（円）'}
-        )
-        chart = (
-            alt.Chart(verticalData)
-            .mark_line(opacity=0.8, clip=True)
-            .encode(
-                x="日付:T",
-                y=alt.Y("株価（円）:Q", stack=None, scale=alt.Scale(domain=[ymin, ymax])),
-                color="銘柄:N"
-            )
-        )
-
-        st.altair_chart(chart, use_container_width=True)
-except:
-    st.error(
-        "おっと！何かエラーが起きているようです。"
-    )
+    表示される図はダウンロードできるので、ご自由にお使いください。
+    """)
