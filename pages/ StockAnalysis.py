@@ -85,11 +85,11 @@ try:
             mpf.make_addplot(data['slow_line'], color='g') # 遅行線
             ]
 
-    labels = ['basic', 'turn', 'slow', 'span']
+    # labels = ['basic', 'turn', 'slow', 'span']
 
     fig, ax = mpf.plot(data, type='candle', figsize=(16,6),style='yahoo', xrotation=0, addplot=lines, returnfig=True,
                         fill_between=dict(y1=data['span1'].values, y2=data['span2'].values, alpha=0.5, color='gray'))
-    ax[0].legend(labels)
+    # ax[0].legend()
     st.pyplot(fig)
 except:
     st.error(
@@ -101,11 +101,11 @@ col1, col2 = st.columns(2)
 with col1:
     st.write("""
     ### 5つの線
-    ##### 1 基準線（basic）:青折れ線
+    ##### 1 基準線：青折れ線
 
     過去26日間の最高値と最安値の中心値を結んだ線で、中期的な相場の方向性を示します。
 
-    ##### 2 転換線（turn）:黄色折れ線
+    ##### 2 転換線：黄色折れ線
 
     過去9日間の最高値と最安値の中心値を結んだ線で、短期的な相場の方向性を示します。
 
@@ -119,9 +119,9 @@ with col1:
 
     過去52日間の最高値と最安値の中心を、26日先に先行させて記入します。
 
-    ※先行スパン1と先行スパン2に囲まれた部分を「雲」（span:グレー部分）と呼びます。
+    ※先行スパン1と先行スパン2に囲まれた部分を「雲」（span：グレー部分）と呼びます。
 
-    ##### 5 遅行スパン（slow）:緑折れ線
+    ##### 5 遅行スパン：緑折れ線
 
     当日の終値を26日前に記入します。
 
