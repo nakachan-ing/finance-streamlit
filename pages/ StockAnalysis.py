@@ -9,9 +9,6 @@ import streamlit as st
 import mplfinance as mpf
 import warnings
 from datetime import date, datetime
-from turtle import color
-import tkinter as TK
-
 
 st.sidebar.write("""
 # 日経225株価
@@ -84,9 +81,9 @@ def get_historical_data(start, company):
 
 try:
     data = get_historical_data(start, company)
-    lines = [mpf.make_addplot(data['basic_line'], color='blue'), # 基準線
-            mpf.make_addplot(data['turn_line'], color='orange'), # 転換線
-            mpf.make_addplot(data['slow_line'], color='green'), # 遅行線
+    lines = [mpf.make_addplot(data['basic_line']), # 基準線
+            mpf.make_addplot(data['turn_line']), # 転換線
+            mpf.make_addplot(data['slow_line']), # 遅行線
             ]
 
     labels = ['basic', 'turn', 'slow', 'span']
