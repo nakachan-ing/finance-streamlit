@@ -1,4 +1,3 @@
-from turtle import color
 import pandas as pd
 import time
 import yfinance as yf
