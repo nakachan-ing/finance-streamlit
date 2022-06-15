@@ -1,3 +1,4 @@
+from turtle import color
 import pandas as pd
 import time
 import yfinance as yf
@@ -81,9 +82,9 @@ def get_historical_data(start, company):
 
 try:
     data = get_historical_data(start, company)
-    lines = [mpf.make_addplot(data['basic_line']), # 基準線
-            mpf.make_addplot(data['turn_line']), # 転換線
-            mpf.make_addplot(data['slow_line']), # 遅行線
+    lines = [mpf.make_addplot(data['basic_line'], color='blue'), # 基準線
+            mpf.make_addplot(data['turn_line'], color='orange'), # 転換線
+            mpf.make_addplot(data['slow_line'], color='green'), # 遅行線
             ]
 
     labels = ['basic', 'turn', 'slow', 'span']
@@ -96,3 +97,54 @@ except:
     st.error(
         "35日以上の期間を指定してください！"
     )
+
+
+col1, col2 = st.columns(2)
+with col1:
+    st.write("""
+    ### 5つの線
+    ##### 1 基準線（basic）
+
+    過去26日間の最高値と最安値の中心値を結んだ線で、中期的な相場の方向性を示します。
+
+    ##### 2 転換線（turn）
+
+    過去9日間の最高値と最安値の中心値を結んだ線で、短期的な相場の方向性を示します。
+
+    ##### 3 先行スパン1
+
+    基準線と転換線の中心を、26日先に先行させて記入します。
+
+    基準線は過去26日間の中心、転換線は過去9日間の中心ですが、先行スパン1はそれぞれの中心となります。
+
+    ##### 4 先行スパン2
+
+    過去52日間の最高値と最安値の中心を、26日先に先行させて記入します。
+
+    ※先行スパン1と先行スパン2に囲まれた部分を「雲」（span）と呼びます。
+
+    ##### 5 遅行スパン（slow）
+
+    当日の終値を26日前に記入します。
+
+    「前日比」は当日の価格と前日の価格を比較したものですが、「遅行線」は当日の価格と26日前の価格を比較していることになります。
+""")
+
+with col2:
+    st.write("""
+    ### 一目均衡表の使い方
+    次のときは、買いシグナルとなり「好転した」と言います。
+
+    ①転換線が基準線を上抜けたとき
+
+    ②遅行スパンがローソク足を上抜けたとき
+
+    ③ローソク足が雲を上抜けたとき
+
+    さらに、①②③の買いシグナルが3つそろった場合を「三役好転」と言い、より強い買いシグナルとなります。
+
+    また、①②③と逆の向きへ動いた場合は売りシグナルとなり、「逆転した」と言います。
+
+    さらに、3つの売りシグナルがそろった場合は「三役逆転」と言い、より強い売りシグナルとなります
+    """)
+
