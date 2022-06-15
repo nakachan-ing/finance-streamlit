@@ -82,7 +82,7 @@ try:
     data = get_historical_data(start, company)
     lines = [mpf.make_addplot(data['basic_line'], color='b'), # 基準線
             mpf.make_addplot(data['turn_line'], color='y'), # 転換線
-            mpf.make_addplot(data['slow_line'], color='g'), # 遅行線
+            mpf.make_addplot(data['slow_line'], color='g') # 遅行線
             ]
 
     labels = ['basic', 'turn', 'slow', 'span']
