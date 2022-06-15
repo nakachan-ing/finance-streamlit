@@ -50,7 +50,7 @@ try:
 
     ymin, ymax = st.sidebar.slider(
         '範囲を指定してください。',
-        0.0, 10000.0, (0.0, 10000.0)
+        0.0, 20000.0, (0.0, 20000.0)
     )
 
     filename = 'nikkei.csv'
